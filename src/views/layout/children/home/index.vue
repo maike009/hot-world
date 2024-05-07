@@ -1,14 +1,34 @@
 <template>
   <div>
-    <PostCom ref="PostCom" @getPost = "getPostFn" :postList = "postList" :total = "total"></PostCom>
-    <!-- <van-uploader v-model="fileList" :name="inputName" multiple :after-read="afterRead" /> -->
+    <div class="swipe-top">
+      <van-swipe :autoplay="3000" width="400">
+        <van-swipe-item v-for="(image, index) in images" :key="index">
+          <van-image width="100%" height="14rem" :src="image" fit="fill"></van-image>
+        </van-swipe-item>
+      </van-swipe>
+    </div>
+    <div>
+      <van-tabs v-model="active" @change="setTagId" swipeable>
+        <div v-for="(tag) in Tags" :key="tag.tagId" style="width: 10px;background-color: red;">
+          <van-tab :title="tag.tagContent">
+          </van-tab>
+        </div>
+        <PostCom ref="PostComTag" @getPost = "getPostByTagFn"
+            :postList = "postList"
+            :total = "total"
+            :tagId = "tagId">
+        </PostCom>
+      </van-tabs>
+
+    </div>
   </div>
 </template>
 
 <script>
-import { uploadFile } from '@/api/common'
+
 import PostCom from '@/components/actives/PostCom.vue'
-import { getPostList } from '@/api/post'
+import { getPostList, getPostByTag } from '@/api/post'
+import { getTags } from '@/api/tags'
 export default {
   name: 'HomeView',
   components: {
@@ -16,61 +36,67 @@ export default {
   },
   data () {
     return {
-      fileList: [],
-      inputName: 'files',
+      tagId: null,
+      images: [
+        'https://hot-world01.oss-cn-shenzhen.aliyuncs.com/08dc6abdbeb8236a1a44511d96728cba.jpeg',
+        'https://hot-world01.oss-cn-shenzhen.aliyuncs.com/2b916ea5e1f0d12edaff71cd0a4c28b.jpg',
+        'https://hot-world01.oss-cn-shenzhen.aliyuncs.com/2eca73767c2fc1a3558083e44908dfe.jpg',
+        'https://hot-world01.oss-cn-shenzhen.aliyuncs.com/a26525a54813c2ed1d0519290a4c38e.jpg'
+      ],
       postList: [],
-      total: 0
+      Tags: [],
+      total: 0,
+      active: 0 // 标签索引
     }
   },
   methods: {
+    // 设置tagId
+    setTagId (name, title) {
+      console.log(title, '被激活了')
+      this.postList = []
+      this.showPoC = false
+      this.tagId = name + 1
+      this.getPostByTagFn(1, 10, this.tagId)
+      console.log(name, title)
+    },
+    // 获取全部帖子
     async getPostFn (page, pageSize) {
-      console.log('home中方法被调用了', page, pageSize)
       const res = await getPostList(page, pageSize)
       this.total = res.data.data.total
       const newData = res.data.data.records
       // 将新数据添加到 postList 中
-      console.log(this.postList, this.total, '父组件添加数据前')
       this.postList.push(...newData)
-      this.$refs.PostCom.updateData()
+      this.$refs.PostComTag.updateData()
     },
-    afterRead (fileObj) {
-      console.dir(fileObj)
-      console.dir(fileObj instanceof Array)
-      // 上传状态
-      fileObj.status = 'uploading'
-      // 状态提示
-      fileObj.message = '上传中...'
-      // 声明form表单数据
-      const formData = new FormData()
-      // 添加文件信息
-      if (fileObj instanceof Array) {
-        fileObj.forEach(e => {
-          formData.append('files', e.file)
-        })
-      } else {
-        formData.append('files', fileObj.file)
-      }
-      // 上传接口调用
-      uploadFile(formData).then(res => {
-        // 上传成功
-        fileObj.status = 'done'
-        // 存储返回数据
-        fileObj.addInfo = res.data.data
-        console.log(fileObj.addInfo)
-      }).catch(() => {
-        // 上传失败
-        fileObj.status = 'failed'
-        // 失败状态提示
-        fileObj.message = '上传失败'
-      })
+    // 获取所有标签
+    async getTagsFn () {
+      const res = await getTags()
+      this.Tags.push(...res.data.data)
+      console.log(res)
+    },
+    // 根据标签获取帖子
+    async getPostByTagFn (page, pageSize, tagId) {
+      const res = await getPostByTag(page, pageSize, tagId)
+      this.postList.push(...res.data.data.records)
+      this.total = res.data.data.total
+      // 使用一个新变量来引用 this.$refs.PostCom
+      this.$refs.PostComTag.updateData()
+      console.log('byTag--->', res)
     }
   },
   created () {
-    this.getPostFn(1, 5)
+    // this.getPostFn(1, 10)
+    this.getTagsFn()
+    this.setTagId(0)
   }
 }
 </script>
 
-<style>
+<style scoped lang="less">
+.swipe-top {
+  width: 100%;
+  height: 20%;
+  padding: 2%;
 
+}
 </style>

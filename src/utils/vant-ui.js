@@ -3,8 +3,15 @@
 // Vue.use(vant)
 import Vue from 'vue'
 import 'vant/lib/index.css'
-import { Uploader, List, Lazyload, Cell, CellGroup, Popup, Picker, DatetimePicker, Field, Form, Tab, Tabs, Checkbox, Dialog, ActionSheet, Rate, Icon, Search, Swipe, SwipeItem, Grid, GridItem, Button, Switch, Tabbar, TabbarItem, NavBar, Toast } from 'vant'
+import { Notify, ImagePreview, Overlay, Tag, Popover, Image, Uploader, Area, List, Lazyload, Cell, CellGroup, Popup, Picker, DatetimePicker, Field, Form, Tab, Tabs, Checkbox, Dialog, ActionSheet, Rate, Icon, Search, Swipe, SwipeItem, Grid, GridItem, Button, Switch, Tabbar, TabbarItem, NavBar, Toast } from 'vant'
+Vue.use(Notify)
 Vue.use(Cell)
+Vue.use(ImagePreview)
+Vue.use(Overlay)
+Vue.use(Tag)
+Vue.use(Popover)
+Vue.use(Area)
+Vue.use(Image)
 Vue.use(Uploader)
 Vue.use(List)
 Vue.use(Lazyload)

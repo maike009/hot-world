@@ -21,10 +21,8 @@ export default {
       return true
     },
     async MixGetEmailCode (email) {
-      console.log(999, email)
       if (!this.validFn(email)) {
         console.log(this.validFn())
-        console.log(888)
         return
       }
       console.log(111)

@@ -21,10 +21,6 @@ const routes = [
         component: () => import('@/views/layout/children/home')
       },
       {
-        path: 'category',
-        component: () => import('@/views/layout/children/category')
-      },
-      {
         path: 'search',
         component: () => import('@/views/layout/children/search')
       },
@@ -38,6 +34,53 @@ const routes = [
       }
     ]
   },
+  // 聊天相关
+  {
+    path: '/chat/:friendId',
+    name: 'Chat',
+    component: () => import('@/views/layout/children/message/chat/ChatView.vue')
+  },
+
+  // 聊天2
+  /* {
+    path: '/chat2',
+    component: () => import('@/views/layout/children/message/chat/ChatView.vue')
+  }, */
+  // post相关
+  {
+    path: '/addPost',
+    name: 'addPost',
+    component: () => import('@/views/post/addPost')
+  },
+  {
+    path: '/postDetail',
+    name: 'postDetail',
+    component: () => import('@/views/post/postDetail')
+  },
+  // 历史记录
+  {
+    path: '/history',
+    component: () => import('@/views/history')
+  },
+  // 草稿箱
+  {
+    path: '/drafts',
+    component: () => import('@/views/drafts')
+  },
+  // 用户相关
+  {
+    path: '/editUser',
+    component: () => import('@/views/layout/children/user/edit')
+  },
+  {
+    path: '/updateParam',
+    component: () => import('@/views/layout/children/user/edit/UpdateParam')
+  },
+  // 用户详情
+  {
+    path: '/userDetail',
+    component: () => import('@/views/userDetail')
+  },
   {
     path: '/login',
     component: Login
@@ -45,6 +88,26 @@ const routes = [
   {
     path: '/register',
     component: Register
+  },
+  // 好友列表
+  {
+    path: '/searchFriend',
+    component: () => import('@/views/layout/children/message/searchFriend')
+  },
+  // 发送添加好友信息
+  {
+    path: '/sendAddFriend',
+    component: () => import('@/views/layout/children/message/sendAddFriend')
+  },
+  // 接送好友请求
+  {
+    path: '/replyAddFriend',
+    component: () => import('@/views/layout/children/message/replyAddFriend')
+  },
+  // Gemini
+  {
+    path: '/AIHelp',
+    component: () => import('@/views/AI')
   }
 ]
 

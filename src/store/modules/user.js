@@ -7,7 +7,7 @@ export default {
     return {
       userInfo: {
         info: {},
-        token: getInfo()
+        token: ''
       }
     }
   },
@@ -16,13 +16,15 @@ export default {
       return state.userInfo.info
     }
   },
+  mounted () {
+    console.log(getInfo())
+  },
   mutations: {
-    setUserToken (state, token) {
-      state.userInfo.token = token
-      setInfo(token)
+    setUserToken (state, userObj) {
+      state.userInfo.token = userObj.jwt
+      setInfo(JSON.stringify(userObj))
     },
     setUserInfo (state, userInfoObj) {
-      console.log('???????????')
       state.userInfo.info = userInfoObj
     }
 

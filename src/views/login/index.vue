@@ -44,8 +44,8 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      username: 'maike',
-      password: '123456',
+      username: '',
+      password: '',
       showForm: true,
       email: '',
       emailCode: ''
@@ -77,7 +77,7 @@ export default {
 <style scoped lang="less">
 #login {
   padding: 40% 5%;
-  background: url('https://hot-world.oss-cn-shenzhen.aliyuncs.com/bgc1.jpg') no-repeat;
+  background: url('https://tse3-mm.cn.bing.net/th/id/OIP-C.4XlkCdz236krJxNEiDeINgHaLH?w=202&h=303&c=7&r=0&o=5&dpr=1.3&pid=1.7') no-repeat;
   background-size: cover;
   background-position:center;
   height: 100vh;
@@ -90,13 +90,14 @@ export default {
 }
 .loginBox{
   margin: 40% 0%;
+  opacity: 0.7;
+  background-color: #fff;
   padding: 5px;
   border-radius: 20px;
 }
 
 .login-card {
   padding: 10px;
-  background-color: #ffffff;
   border: 1px #d0cdcd border;
   border-radius: 10px;
 }

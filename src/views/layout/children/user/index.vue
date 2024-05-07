@@ -1,8 +1,8 @@
 <template>
   <div class="user">
     <!-- 头部区域 -->
-    <div class="user-header">
-      <img :src="UserDetail.avatar || 'https://img0.baidu.com/it/u=879861520,723007625&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500'" alt="profile" class="profile-picture">
+    <div class="user-header" @click="$router.push('/editUser')">
+      <van-image fit="cover" round :src="UserDetail.avatar || 'https://img0.baidu.com/it/u=879861520,723007625&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500'" alt="profile" class="profile-picture"/>
       <div class="user-info">
         <div><span class="username">{{UserDetail.nickname}}</span></div>
         <div>简介：<span class="bio">{{UserDetail.bio}}</span></div>
@@ -31,19 +31,17 @@
     <div class="features">
       <div class="feature-item">
         <van-icon name="photo-o" size="40"/><br/>
-        <span>我的帖子</span>
+        <span @click="$router.push('/addPost')">发布作品</span>
       </div>
-      <div class="feature-item">
-        <van-icon name="goods-collect-o" size="40"/><br/>
-        <span>赞/收藏</span>
-
+      <div class="feature-item" @click="$router.push('/AIHelp')">
+        <van-icon name="smile-o" size="40"/><br/>
+        <span>AI小助手</span>
       </div>
-      <div class="feature-item">
+      <div class="feature-item" @click="$router.push('/history')">
         <van-icon name="underway-o" size="40"/><br/>
         <span>浏览记录</span>
-
       </div>
-      <div class="feature-item">
+      <div class="feature-item" @click="$router.push('/drafts')">
         <van-icon name="todo-list-o" size="40"/><br/>
         <span>草稿箱</span>
       </div>
@@ -76,16 +74,15 @@ export default {
       try {
         // 获取用户信息
         const res = await getUserInfo()
-        console.log(res, '创建userDDD')
         // 将用户信息存储到store中
         this.$store.commit('user/setUserInfo', res.data.data)
-        console.log(7799)
       } catch (error) {
         console.log(error, 'user...')
       }
     }
   },
   created () {
+    console.log(this.$store.getters)
     this.setUserInfo()
   }
 }

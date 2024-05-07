@@ -1,6 +1,6 @@
 <template>
     <div class="register-container">
-      <form @submit="registerFn" class="register-form">
+      <form @submit.prevent="registerFn" class="register-form">
         <h2>用户注册</h2>
 
         <div class="form-group">
@@ -24,16 +24,14 @@
         </div>
         <div v-if="passwordMismatch" style="color: red; margin-left: 30vw;">两次输入的密码不一致</div>
 
-        <!-- 新增选项
         <div class="form-group">
           <label for="gender">性别</label>
           <select id="gender" v-model="formData.gender" required>
             <option disabled value="" selected hidden>请选择性别</option>
-            <option value="male">男</option>
-            <option value="female">女</option>
-            <option value="other">其他</option>
+            <option value="1">男</option>
+            <option value="0">女</option>
           </select>
-        </div> -->
+        </div>
         <div class="form-group">
           <label for="email">邮箱</label>
           <input type="email" id="email" v-model="formData.cEmail" placeholder="请输入邮箱" required>
@@ -49,7 +47,7 @@
                 {{Second===totalSecond ? '获取验证码': Second + '秒后重新发送'}}
               </button>
         </div>
-        <button type="submit" class="register-btn">注册</button>
+        <button style="background-color: skyblue;" type="submit" class="register-btn">注册</button>
       </form>
     </div>
   </template>
@@ -63,12 +61,13 @@ export default {
   data () {
     return {
       formData: {
-        username: 'test002',
-        nickname: '测试2号',
-        password: '111111',
-        confirmPassword: '111111',
-        cEmail: '2170675742@qq.com',
-        emailCode: '111'
+        username: '',
+        nickname: '',
+        password: '',
+        confirmPassword: '',
+        gender: '',
+        cEmail: '',
+        emailCode: ''
       },
       passwordMismatch: false
     }
@@ -86,11 +85,16 @@ export default {
         this.$toast('昵称最大为30个字符')
         return
       }
-      // 在这里处理注册逻辑，可以发送注册请求等
+      if (!/^[a-zA-Z0-9]{5,49}$/.test(this.formData.password)) {
+        this.$toast('用户名必须是英文或数字，长度为6-50个字符')
+        return
+      }
+      // 发送注册请求
       console.log('注册信息:', this.formData)
       const res = await register(this.formData)
       if (res.data.code === 1) {
         this.$toast.success(res.data.data)
+        console.log('注册成功......')
         this.$router.push('/login')
       }
     }
@@ -101,7 +105,7 @@ export default {
   <style scoped lang="less">
   .register-container {
     padding: 0.6rem;
-    background-image: url('https://hot-world.oss-cn-shenzhen.aliyuncs.com/bgc1.jpg'); /* 替换为你的背景图路径 */
+    background-image: url('https://tse3-mm.cn.bing.net/th/id/OIP-C.4XlkCdz236krJxNEiDeINgHaLH?w=202&h=303&c=7&r=0&o=5&dpr=1.3&pid=1.7'); /* 替换为你的背景图路径 */
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -111,6 +115,7 @@ export default {
   }
 
   .register-form {
+    opacity: 0.7;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 2rem;
     border-radius: 10px;
@@ -158,7 +163,6 @@ export default {
 
   }
   button {
-    background-color: #42b983;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -175,10 +179,10 @@ export default {
         height: 31px;
         line-height: 15px;
         width: 95%;
-        border: 1px #cea26a solid;
+        border: 1px solid skyblue;
         border-radius: 10px;
         font-size: 1rem;
-        color: #e7aa5a;
+        color: skyblue;
         background-color: transparent;
         padding-right: 9px;
       }

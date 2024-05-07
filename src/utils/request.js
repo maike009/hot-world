@@ -1,13 +1,19 @@
 // 创建axios实例，将创建出来的实例进行自定义配置
 // 不会污染原始的 axios实例
-import store from '@/store'
 import axios from 'axios'
 import router from '@/router'
 import { Toast } from 'vant'
+import { getInfo } from './storage'
+
+// const ServerUrl = 'http://192.168.0.185:10088/user'
+// const CommonUrl = 'http://192.168.0.185:10088'
+
+const ServerUrl = 'http://localhost:10088/user'
+const CommonUrl = 'http://localhost:10088'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:10088/user',
-  timeout: 5000
+  baseURL: ServerUrl,
+  timeout: 20000
 })
 // 自定义配置 请求/响应 拦截器
 // 添加请求拦截器
@@ -21,9 +27,15 @@ instance.interceptors.request.use(function (config) {
     loadingType: 'spinner'
   })
   if (config.url.includes('common')) {
-    config.baseURL = 'http://localhost:10088'
+    config.baseURL = CommonUrl
   }
-  const token = store.getters.token
+  let token
+  try {
+    const jStr = getInfo()
+    token = JSON.parse(jStr).jwt
+  } catch (error) {
+    console.log(error)
+  }
   if (token !== null && token !== '') {
     config.headers.authentication = token
     config.headers.platform = 'H5'
@@ -38,11 +50,6 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
   // 2xx 范围内的状态码都会触发该函数。
   // 对响应数据做点什么
-
-  if (response.data.status === 401) {
-    console.log(response, '401错误')
-    router.push('/login')
-  }
   if (response.data.code !== 1) {
     // 给提示
     Toast.fail(response.data.msg)
@@ -56,23 +63,31 @@ instance.interceptors.response.use(function (response) {
   // 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
   Toast.clear()
-  console.log('这是超出200状态码的错误', error)
+  if (error.code === 'ERR_NETWORK') {
+    Toast.fail('网络错误')
+    return Promise.reject(error)
+  }
   // 检查错误类型并给出相应提示
   if (error.response) {
     switch (error.response.status) {
       case 401:
         // 身份验证失败的错误处理
-        Toast.fail('身份验证失败，请重新登录')
+        Toast.fail('身份验证失败，请重新登录!')
         router.push('/login')
         break
       // 可以根据需要处理更多的HTTP错误状态码
+      case 'ERR_NETWORK':
+        Toast.fail('网络错误')
+        break
       default:
         Toast.fail('发生错误')
+        console.log(error)
         break
     }
   } else {
     // 不是来自HTTP响应的错误
-    Toast.fail('网络错误')
+    Toast.fail('服务器错误')
+    console.log(error)
   }
   return Promise.reject(error)
 })
