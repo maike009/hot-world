@@ -8,8 +8,8 @@ import { getInfo } from './storage'
 // const ServerUrl = 'http://192.168.0.185:10088/user'
 // const CommonUrl = 'http://192.168.0.185:10088'
 
-const ServerUrl = 'http://localhost:10088/user'
-const CommonUrl = 'http://localhost:10088'
+const ServerUrl = 'http://172.17.0.2:10088/user'
+const CommonUrl = 'http://172.17.0.2:10088'
 
 const instance = axios.create({
   baseURL: ServerUrl,
